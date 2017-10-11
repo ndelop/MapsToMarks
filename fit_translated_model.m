@@ -13,7 +13,7 @@ if nargin < 4
     eps = 0.01;
 end
 if nargin < 3
-    centroid = heatmap_centroid(prediction,2);
+    centroid = heatmap_centroid(prediction,2)
 end
 
 
@@ -43,8 +43,8 @@ A(w<=eps,:) = [];
 
 
 average = ShapeModel.avg.';
-% average(1:2:end) = average(1:2:end)+centroid(1);
-% average(2:2:end) = average(2:2:end)+centroid(2);
+average(1:2:end) = average(1:2:end)+centroid(1);
+average(2:2:end) = average(2:2:end)+centroid(2);
 
 % target values
 [px,py] = ndgrid(1:size(prediction,2),1:size(prediction,3));
@@ -77,7 +77,7 @@ d = -ShapeModel.C*average;
 %and ShapeModel.EVs(:,1:n)*x < imgsz - ShapeModel.avg.'
 
 F=[-ShapeModel.EVs(:,1:n); ShapeModel.EVs(:,1:n)];
-g = [ShapeModel.avg.' ; (imgsz - ShapeModel.avg.')];
+g = [average ; (imgsz - average)];
 
 %solve the system A*x=b subject to inequality constraints
 %C*x <= d and

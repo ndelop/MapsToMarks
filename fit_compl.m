@@ -66,7 +66,8 @@ if nargout > 2
 end
 
 dT = toc(startTime);
-
+pause(0.5);
+delete(bar);
 fprintf(strcat([num2str(imgn) ' faces processed in ' num2str(round(dT,2)) 's, ' num2str(round(imgn/dT,2)) 'fps\n']))
 end
 

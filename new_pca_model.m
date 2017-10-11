@@ -5,7 +5,7 @@ train_labels(any(any(train_labels==-1000,2),3),:,:) = []; %cleanup
 train_labels = permute(train_labels,[1,3,2]); %reorder
 train_labels = reshape(train_labels,size(train_labels,1),size(train_labels,2)*size(train_labels,3)); %matrix to vector
 %rows of train_labels: [x1 y1 x2 y2 ... xN yN]
-%train_labels = allign_training_set(train_labels);
+train_labels = allign_training_set(train_labels);
 
 ShapeModel.avg = mean(train_labels,1); %calc shape average
 

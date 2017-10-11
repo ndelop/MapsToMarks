@@ -25,13 +25,13 @@ pred_max(isnan(pred_max)) = 0;
 load('kaggle.mat')
 
 %% Net maximum
-x=[];
-y=[];
+x=zeros(size(pred,3),size(pred, 4));
+y=x;
 for i=1:size(pred, 4)
     for l = 1:size(pred,3)
         p = squeeze(pred(:,:,l,i));
         [maxval, maxpos] = max(p(:));
-        [xmax ymax] = ind2sub(size(p), maxpos);
+        [xmax, ymax] = ind2sub(size(p), maxpos);
         x(l,i)=xmax;
         y(l,i)=ymax;
     end
@@ -39,8 +39,8 @@ end
 
 
 %%
-SM = new_pca_model(train_labels)
-SM.n=14
+SM = new_pca_model(train_labels);
+SM.n=14;
 [xg, yg, xl, yl] = fit_compl(SM, pred_new);
 %[xg, yg] = fit_compl(SM, pred_new);
 
