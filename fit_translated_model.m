@@ -31,6 +31,7 @@ lagr_eps = 1;
 % applying the coefficients to the EVs yields the landmarks (x1,y1,...,xN,yN)
 
 % weights
+    
 w = repmat(prediction,[1,1,1,2]);
 w = permute(w,[4,1,2,3]); % 2 lmn x y
 w = w(:);
@@ -60,7 +61,6 @@ b(w<=eps) = [];
 %so C = ShapeModel.C*ShapeModel.EVs(:,1:n)
 %and d = -ShapeModel.C*ShapeModel.avg.'
 
-
 %only use constraints true for more than lagr_eps of the training data
 ShapeModel.C = ShapeModel.C(ShapeModel.diffs>=lagr_eps, :);
 C = ShapeModel.C*ShapeModel.EVs(:,1:n);
@@ -85,6 +85,8 @@ g = [ShapeModel.avg.' ; (imgsz - ShapeModel.avg.')];
 
 CF=[C;F];
 dg=[d;g];
+
+
 
 options = optimoptions('lsqlin','Algorithm','interior-point');
 [~, x] = evalc('lsqlin(A,b,CF,dg,[],[],[],[],[],options);'); %evalc to supress output

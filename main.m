@@ -41,7 +41,7 @@ end
 %%
 SM = new_pca_model(train_labels)
 SM.n=14
-[xg, yg, xl, yl] = fit_compl(SM, pred);
+[xg, yg, xl, yl] = fit_compl(SM, pred_new);
 %[xg, yg] = fit_compl(SM, pred_new);
 
 %% Store in CSV for Kaggle evaluation

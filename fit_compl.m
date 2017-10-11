@@ -59,6 +59,7 @@ if nargout > 2
             waitbar(k/imgn,bar,strcat(['Local Fit, dx=',num2str(dxy),' ', num2str(fps),'fps']))
         end
 
+
     end
     xl=x2;
     yl=y2;
