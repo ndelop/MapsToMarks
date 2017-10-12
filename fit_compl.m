@@ -1,4 +1,8 @@
-function [x, y, xl, yl] = fit_compl(SM, prediction)
+function [x, y, xl, yl] = fit_compl(SM, prediction, GUI)
+
+if nargin < 3
+    GUI = true;
+end
 
 if ~SM.constrained
     fprintf('SM has no constraints')
@@ -9,23 +13,23 @@ imgn = size(prediction,4);
 
 x = zeros(lmn,imgn);
 y = x;
-bar = waitbar(0, 'First fit');
+if GUI bar = waitbar(0, 'First fit'); end;
 tic
 
 for k = 1:imgn
-    tmp = fit_translated_model(SM,prediction(:,:,:,k));
+    tmp = fit_transrotated_model(SM,prediction(:,:,:,k));
     
     x(:,k) = tmp(1:2:end);
     y(:,k) = tmp(2:2:end);
     
     %fprintf([num2str(k),'\n'])
     fps = round(k/toc,1);
-    waitbar(k/imgn, bar, strcat(['First fit ', num2str(fps),'fps']));
+    if GUI waitbar(k/imgn, bar, strcat(['First fit ', num2str(fps),'fps'])); end;
 end
 
 %Local fit
 if nargout > 2
-    wid=[20 7];
+    wid=[40 20 7];
     wid = round(wid);
     x2=x;
     y2=y;
@@ -46,17 +50,17 @@ if nargout > 2
            end;
         end;
 
-        waitbar(0,bar,strcat('Local Fit, dx=',num2str(dxy)));
+        if GUI waitbar(0,bar,strcat('Local Fit, dx=',num2str(dxy))); end;
         tic;
         for k = 1:imgn
             predloc = prediction(:,:,:,k);
             predloc(~selector(:,:,:,k)) = 0;    %set all outlier weights to zero
-            tmp = fit_translated_model(SM,predloc,[mean(x2(:,k)) mean(y2(:,k))]);
+            tmp = fit_transrotated_model(SM,predloc,face_centroid([x2(:,k), y2(:,k)]), face_tilt([x2(:,k), y2(:,k)]));
             x2(:,k) = tmp(1:2:end);
             y2(:,k) = tmp(2:2:end);
 
             fps = round(k/toc,1);
-            waitbar(k/imgn,bar,strcat(['Local Fit, dx=',num2str(dxy),' ', num2str(fps),'fps']))
+            if GUI waitbar(k/imgn,bar,strcat(['Local Fit, dx=',num2str(dxy),' ', num2str(fps),'fps'])); end;
         end
 
 
@@ -66,8 +70,7 @@ if nargout > 2
 end
 
 dT = toc(startTime);
-pause(0.5);
-delete(bar);
+if GUI delete(bar); end;
 fprintf(strcat([num2str(imgn) ' faces processed in ' num2str(round(dT,2)) 's, ' num2str(round(imgn/dT,2)) 'fps\n']))
 end
 

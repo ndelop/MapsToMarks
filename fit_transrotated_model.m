@@ -1,7 +1,7 @@
-function [landmarks] = fit_translated_model(ShapeModel, prediction, centroid, eps, flip)
+function [landmarks] = fit_transrotated_model(ShapeModel, prediction, centroid, theta, eps, flip)
 imgsz = size(prediction,1);
 
-if nargin < 5
+if nargin < 6
     flip = false;
 end
 if ~flip
@@ -9,9 +9,14 @@ if ~flip
 end
 prediction = squeeze(prediction); %lmn x y
 
-if nargin < 4
+if nargin < 5
     eps = 0.01;
 end
+
+if nargin < 4
+    theta = heatmap_tilt(prediction);
+end
+
 if nargin < 3
     centroid = heatmap_centroid(prediction,2);
 end
@@ -36,15 +41,23 @@ w = repmat(prediction,[1,1,1,2]);
 w = permute(w,[4,1,2,3]); % 2 lmn x y
 w = w(:);
 
+
+ROT = kron(eye(15),rotmat(theta));
+ShapeModel.avg = (ROT*(ShapeModel.avg.')).';
+ShapeModel.EVs = ROT*ShapeModel.EVs;
+
 % 2N equations per pixel
 A = repmat(ShapeModel.EVs(:,1:n),size(prediction,2)*size(prediction,3),1);
 A = bsxfun(@times,A,w);
 A(w<=eps,:) = [];
 
 
-average = ShapeModel.avg.';
-average(1:2:end) = average(1:2:end)+centroid(1);
-average(2:2:end) = average(2:2:end)+centroid(2);
+center = zeros(size(ShapeModel.avg.'));
+
+center(1:2:end) = centroid(1);
+center(2:2:end) = centroid(2);
+average = ShapeModel.avg.' + center;
+
 
 % target values
 [px,py] = ndgrid(1:size(prediction,2),1:size(prediction,3));
@@ -63,8 +76,12 @@ b(w<=eps) = [];
 
 %only use constraints true for more than lagr_eps of the training data
 ShapeModel.C = ShapeModel.C(ShapeModel.diffs>=lagr_eps, :);
+ShapeModel.C = ShapeModel.C * ROT;
+
 C = ShapeModel.C*ShapeModel.EVs(:,1:n);
 d = -ShapeModel.C*average;
+
+
 
 
 %landmarks should also be inside the picture
@@ -86,14 +103,12 @@ g = [average ; (imgsz - average)];
 CF=[C;F];
 dg=[d;g];
 
-err = @(x) A*x - b;
 
-%options = optimoptions('lsqlin','Algorithm','interior-point');
-%[~, x] = evalc('lsqlin(A,b,CF,dg,[],[],[],[],[],options);'); %evalc to supress output
+options = optimoptions('lsqlin','Algorithm','interior-point');
+[~, x] = evalc('lsqlin(A,b,C,d,[],[],[],[],[],options);'); %evalc to supress output
 
-options = optimoptions('lsqnonlin','MaxIterations',150');
-%x = lsqnonlin(err, zeros(size(A,2),1), [], [], options);
-[~, x] = evalc('lsqnonlin(err, zeros(size(A,2),1), [], [], options);'); %evalc to supress output
+
+
 landmarks = average + ShapeModel.EVs(:,1:n)*x;
 
 end
