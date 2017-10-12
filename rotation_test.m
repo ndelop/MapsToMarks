@@ -1,11 +1,11 @@
-imageid = 1;
+imageid = 1557;
 fprintf('-------------------')
 p=squeeze(pred_new(:,:,:,imageid));
 SM = new_pca_model(train_labels);
 
-for i = 40
+for i = 1:60
     n = rotate_heatmaps(p,i);
-    i=imrotate(squeeze(eval_img(imageid,:,:)./255), i);
+    img=imrotate(squeeze(eval_img(imageid,:,:)./255), i);
     %[xg, yg] = fit_compl(SM, n, false);
     
 %     tmp = fit_rotated_model(SM, n);
@@ -13,20 +13,21 @@ for i = 40
 %     yg=tmp(2:2:end);
 
     [xg, yg, xl, yl] = fit_compl(SM, n, false);
-    ht=heatmap_tilt(permute(n,[3 1 2]))
-    ft=face_tilt([xl yl])
+    i
+    ht = heatmap_tilt(permute(n,[3 1 2]))
+    ft = face_tilt([xg yg])
     plot_face(tmp)
     
 %     [xg, yg, xl, yl] = fit_compl(SM, n, false);
 %     [xm ym] = net_max(n);
 % 
-     imshow(i)
+     imshow(img)
      
      hold on;
      plot_face([xg yg],'g')
 %     plot_face([xm ym],'r')
 % 
-%     hold off
-%     pause(0.1)
+     hold off
+     pause(0.08)
 
 end

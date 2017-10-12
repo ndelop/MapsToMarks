@@ -55,7 +55,7 @@ if nargout > 2
         for k = 1:imgn
             predloc = prediction(:,:,:,k);
             predloc(~selector(:,:,:,k)) = 0;    %set all outlier weights to zero
-            tmp = fit_transrotated_model(SM,predloc,face_centroid([x2(:,k), y2(:,k)]), face_tilt([x2(:,k), y2(:,k)]));
+            tmp = fit_transrotated_model(SM,predloc,face_centroid([x2(:,k), y2(:,k)]));
             x2(:,k) = tmp(1:2:end);
             y2(:,k) = tmp(2:2:end);
 
