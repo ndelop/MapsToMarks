@@ -1,7 +1,7 @@
 function [ images, pred, gtx, gty, lmx, lmy ] = result_view_reg_init()
 
-images = evalin('base','img');
-pred = evalin('base','n');
+images = evalin('base','eval_img');
+pred = evalin('base','pred_new');
 
 %Red
 lmx = evalin('base','xg');
