@@ -2,7 +2,7 @@ function [ new_labels ] = allign_training_set( train_labels )
 %positions centroid of each face on 0,0
 
 new_labels = zeros(size(train_labels));
-size(train_labels)
+
 for l=1:size(train_labels,1)
     t = train_labels(l,:);
     t=t(:);

@@ -1,7 +1,7 @@
 function [ images, pred, gtx, gty, lmx, lmy ] = result_view_reg_init()
 
-images = evalin('base','eval_img');
-pred = evalin('base','pred');
+images = evalin('base','img');
+pred = evalin('base','n');
 
 %Red
 lmx = evalin('base','xg');
@@ -10,7 +10,7 @@ lmy = evalin('base','yg');
 % gty = evalin('base','gty');
 
 %Green
-% gtx = zeros(size(lmx));
-% gty = zeros(size(lmy));
-gtx = evalin('base','xl');
-gty = evalin('base','yl');
+gtx = zeros(size(lmx));
+gty = zeros(size(lmy));
+% gtx = evalin('base','xl');
+% gty = evalin('base','yl');

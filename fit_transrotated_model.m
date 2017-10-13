@@ -26,6 +26,7 @@ end
 if numel(size(prediction)) > 3
     error('Currently, only 1 image at a time is supported.');
 end
+oldSM = ShapeModel;
 n=ShapeModel.n;
 lagr_eps = 1;
 % solve A*x=b, weighted by the heatmap pixel values, using the first n
@@ -76,12 +77,14 @@ b(w<=eps) = [];
 
 %only use constraints true for more than lagr_eps of the training data
 ShapeModel.C = ShapeModel.C(ShapeModel.diffs>=lagr_eps, :);
-ShapeModel.C = ShapeModel.C * ROT;
 
-C = ShapeModel.C*ShapeModel.EVs(:,1:n);
-d = -ShapeModel.C*average;
+% C = ShapeModel.C*ShapeModel.EVs(:,1:n);
+% d = -ShapeModel.C*average;
 
+oldSM.C = oldSM.C(oldSM.diffs>=lagr_eps, :);
 
+C = oldSM.C*ROT*ROT*oldSM.EVs(:,1:n);
+d = -oldSM.C*ROT*ROT*(oldSM.avg.');
 
 
 %landmarks should also be inside the picture
@@ -103,6 +106,8 @@ g = [average ; (imgsz - average)];
 CF=[C;F];
 dg=[d;g];
 
+C=[];
+d=[];
 
 options = optimoptions('lsqlin','Algorithm','interior-point');
 [~, x] = evalc('lsqlin(A,b,C,d,[],[],[],[],[],options);'); %evalc to supress output
@@ -110,5 +115,5 @@ options = optimoptions('lsqlin','Algorithm','interior-point');
 
 
 landmarks = average + ShapeModel.EVs(:,1:n)*x;
-
+%landmarks = center + ROT*(ShapeModel.EVs(:,1:n)*x + ShapeModel.avg.');
 end
