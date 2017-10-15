@@ -25,7 +25,7 @@ pred_max(isnan(pred_max)) = 0;
 load('kaggle.mat')
 
 %% Net maximum
-[x, y] = net_max(pred);
+[x, y] = net_max(pred_new);
 
 
 %%

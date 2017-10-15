@@ -26,9 +26,9 @@ end
 if numel(size(prediction)) > 3
     error('Currently, only 1 image at a time is supported.');
 end
-oldSM = ShapeModel;
 n=ShapeModel.n;
 lagr_eps = 1;
+
 % solve A*x=b, weighted by the heatmap pixel values, using the first n
 % components of the model
 % higher n means more accurate fitting but more noise as well
@@ -43,12 +43,12 @@ w = permute(w,[4,1,2,3]); % 2 lmn x y
 w = w(:);
 
 
-ROT = kron(eye(15),rotmat(theta));
-ShapeModel.avg = (ROT*(ShapeModel.avg.')).';
-ShapeModel.EVs = ROT*ShapeModel.EVs;
+ROT = kron(eye(size(prediction,1)),rotmat(theta));
+
+
 
 % 2N equations per pixel
-A = repmat(ShapeModel.EVs(:,1:n),size(prediction,2)*size(prediction,3),1);
+A = repmat(ROT*ShapeModel.EVs(:,1:n),size(prediction,2)*size(prediction,3),1);
 A = bsxfun(@times,A,w);
 A(w<=eps,:) = [];
 
@@ -57,7 +57,7 @@ center = zeros(size(ShapeModel.avg.'));
 
 center(1:2:end) = centroid(1);
 center(2:2:end) = centroid(2);
-average = ShapeModel.avg.' + center;
+average = ROT*(ShapeModel.avg.') + center;
 
 
 % target values
@@ -78,13 +78,9 @@ b(w<=eps) = [];
 %only use constraints true for more than lagr_eps of the training data
 ShapeModel.C = ShapeModel.C(ShapeModel.diffs>=lagr_eps, :);
 
-% C = ShapeModel.C*ShapeModel.EVs(:,1:n);
-% d = -ShapeModel.C*average;
+C = ShapeModel.C*ShapeModel.EVs(:,1:n);
+d = -ShapeModel.C*(ShapeModel.avg.');
 
-oldSM.C = oldSM.C(oldSM.diffs>=lagr_eps, :);
-
-C = oldSM.C*ROT*ROT*oldSM.EVs(:,1:n);
-d = -oldSM.C*ROT*ROT*(oldSM.avg.');
 
 
 %landmarks should also be inside the picture
@@ -106,14 +102,11 @@ g = [average ; (imgsz - average)];
 CF=[C;F];
 dg=[d;g];
 
-C=[];
-d=[];
 
 options = optimoptions('lsqlin','Algorithm','interior-point');
 [~, x] = evalc('lsqlin(A,b,C,d,[],[],[],[],[],options);'); %evalc to supress output
 
 
+landmarks = center + ROT*(ShapeModel.avg.') + ROT*ShapeModel.EVs(:,1:n)*x;
 
-landmarks = average + ShapeModel.EVs(:,1:n)*x;
-%landmarks = center + ROT*(ShapeModel.EVs(:,1:n)*x + ShapeModel.avg.');
 end
