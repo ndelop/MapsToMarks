@@ -1,7 +1,7 @@
 function [x, y, xl, yl] = fit_compl(SM, prediction, wind, GUI, model_constraints ,image_boundary_constraints)
-%FIT_COMPL fits the model to a set of heatmaps and returns the predictions
+%FIT_COMPL fits the model to a set of images(=sets of heatmaps)  and returns the predictions
 %after the first iteration and after all iterations
-
+%See also FIT_TRANSROTATED_MODEL
 if nargin < 6
     image_boundary_constraints = false;
 end
@@ -12,7 +12,7 @@ if nargin < 4
     GUI = true;
 end
 if nargin < 3
-    wind = [40 20 10];
+    wind = [20 10 5];
 end
 
 
@@ -62,7 +62,8 @@ for iter=1:size(wind,2)
         predloc = prediction(:,:,:,k);
         predloc(~selector(:,:,:,k)) = 0;    %set all outlier weights to zero
         centroid = face_centroid([x2(:,k), y2(:,k)]);
-        tmp = fit_transrotated_model(SM, predloc, model_constraints, image_boundary_constraints, centroid);
+        tilt = face_tilt([x2(:,k), y2(:,k)]);
+        tmp = fit_transrotated_model(SM, predloc, model_constraints, image_boundary_constraints, centroid, tilt);
         x2(:,k) = tmp(1:2:end);
         y2(:,k) = tmp(2:2:end);
 

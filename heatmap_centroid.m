@@ -3,7 +3,7 @@ function [centroid] = heatmap_centroid(heatmaps, method)
 %dimensions of heatmaps: lmn x y
 %if method==1 the centroid of the sum of all heatmaps is returned
 %if method==2 the centroid of the weighted maxima of each heatmap is returned
-% See also FACE_CENTROID
+%See also FACE_CENTROID
 
 if nargin < 2
     method = 2

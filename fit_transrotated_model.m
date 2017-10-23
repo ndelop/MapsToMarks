@@ -1,5 +1,8 @@
 function [landmarks] = fit_transrotated_model(ShapeModel, prediction, model_constraints, image_boundary_constraints, centroid, theta, eps, flip)
-
+%FIT_TRANSROTATED_MODEL returns landmarks after a single constrained model fitting
+%the types of constraints to be used can be set
+%the face centroid and tilt can be passed as arguments or estimated from the heatmaps
+%See also FIT_COMPL, HEATMAP_CENTROID, HEATMAP_TILT
 imgszx = size(prediction,1);
 imgszy = size(prediction,2);
 lmn = size(prediction,3);
@@ -41,25 +44,22 @@ n=ShapeModel.n;
 % the solution x are the coefficients for best fitting landmark coordinates
 % applying the coefficients to the EVs yields the landmarks (x1,y1,...,xN,yN)
 
-% weights
-    
+% weights:
 w = repmat(prediction,[1,1,1,2]);
 w = permute(w,[4,1,2,3]); % 2 lmn x y
 w = w(:);
 
+%rotation matrix:
+ROT = kron(eye(size(prediction,1)),rotmat(theta));
 
-ROT = kron(eye(size(prediction,1)),rotmat(theta));%rotation matrix
 
-
-
-% 2N equations per pixel
+% 2n equations per pixel:
 A = repmat(ROT*ShapeModel.EVs(:,1:n),size(prediction,2)*size(prediction,3),1);
 A = bsxfun(@times,A,w);
 A(w<=eps,:) = [];
 
 
 center = zeros(size(ShapeModel.avg.'));
-
 center(1:2:end) = centroid(1);
 center(2:2:end) = centroid(2);
 average = ROT*(ShapeModel.avg.') + center;
@@ -114,7 +114,7 @@ end
 CF=[C;F];
 dg=[d;g];
 
-
+%constrained LLSQ fitting
 options = optimoptions('lsqlin','Algorithm','interior-point');
 [~, x] = evalc('lsqlin(A,b,CF,dg,[],[],[],[],[],options);'); %evalc to supress output
 
