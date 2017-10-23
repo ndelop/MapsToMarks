@@ -1,4 +1,5 @@
 function [ x, y ] = net_max( pred )
+%NET_MAX returns landmark locations using only heatmap maxima
 
 x=zeros(size(pred,3),size(pred, 4));
 y=x;

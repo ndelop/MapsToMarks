@@ -1,10 +1,11 @@
 function [ tilt ] = face_tilt( face, landmarks )
-%calculates tilt of a face based on its landmarks
-%landmarks should be a list of landmarks that are expected to lie roughly
-%on a horizontal line
+%FACE_TILT calculates tilt of a face based on its landmarks
+%landmarks should be a list of landmarks that are expected to lie on a
+%horizontal line on a non tilted face e.g. pupils of the eyes
+%See also HEATMAP_TILT
 
 if nargin < 2
-  landmarks = [3, 4, 5, 6];  
+  landmarks = [3, 4, 5, 6]; %default for Kaggle dataset
 end
 
 face=face.';

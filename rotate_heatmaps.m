@@ -1,5 +1,7 @@
 function [ newheatmaps ] = rotate_heatmaps( heatmaps, theta )
-%heatmaps x y nlm
+%ROTATE_HEATMAPS returns heatmaps rotated by the specified angle
+%heatmaps dimensions x y nlm
+%used for testing only
 
 for i=1:size(heatmaps,3)
    h = heatmaps(:,:,i);

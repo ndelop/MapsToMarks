@@ -1,3 +1,5 @@
+%scripts to produce example images
+
 %%--
 i = 1033;
 xlocal = xl(:,i);

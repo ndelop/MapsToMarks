@@ -31,17 +31,13 @@ load('kaggle.mat')
 [x, y] = net_max(pred_new);
 
 
-%% Setup and model fitting
+%%
 SM = new_pca_model(train_labels)%train model
 %SM.n = 12 %experiment with different model orders
-
 GUI = true; %completion percentage bar
-
 window_sizes = [40 20 7]; %empty vector to disable local fitting
-
 model_constraints = true; %constraints described in write-up
-
-image_boundary_constraints = true; % constraints not described in write-up,
+image_boundary_constraints = false; % constraints not described in write-up,
 %only activate under the assumption all landmarks lie inside the picture
 
 [xg, yg, xl, yl] = fit_compl(SM, pred_new, window_sizes, GUI, model_constraints, image_boundary_constraints);

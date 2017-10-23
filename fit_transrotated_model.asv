@@ -1,8 +1,8 @@
 function [landmarks] = fit_transrotated_model(ShapeModel, prediction, model_constraints, image_boundary_constraints, centroid, theta, eps, flip)
 
-imgszx = size(prediction,1);
-imgszy = size(prediction,2);
-lmn = size(prediction,3);
+imgszx = size(prediction,1)
+imgszy = size(prediction,2)
+lmn = size(prediction,3)
 
 if nargin < 8
     flip = false;
@@ -106,8 +106,8 @@ if image_boundary_constraints
     %ROT*ShapeModel.EVs(:,1:n)*x <= bound -(center + ROT*(ShapeModel.avg.'))
     %
 
-    F=[-ROT*ShapeModel.EVs(:,1:n); ROT*ShapeModel.EVs(:,1:n)];
-    g = [center + ROT*(ShapeModel.avg.'); (bound -(center + ROT*(ShapeModel.avg.')))];
+    F=[-ShapeModel.EVs(:,1:n); ShapeModel.EVs(:,1:n)];
+    g = [average ; (imgsz - average)];
     %F*x <= g
 end
 

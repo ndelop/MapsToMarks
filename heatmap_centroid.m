@@ -1,6 +1,13 @@
 function [centroid] = heatmap_centroid(heatmaps, method)
-%detects centroid of face weighted by heatmap values
+%HEATMAP_CENTROID detects centroid of a face using its landmark heatmaps
 %dimensions of heatmaps: lmn x y
+%if method==1 the centroid of the sum of all heatmaps is returned
+%if method==2 the centroid of the weighted maxima of each heatmap is returned
+% See also FACE_CENTROID
+
+if nargin < 2
+    method = 2
+end
 
 if method==1 %Use weighted average of sum of all heatmaps
 

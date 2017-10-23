@@ -1,4 +1,5 @@
 function [landmarks] = fit_translated_model(ShapeModel, prediction, centroid, eps, flip)
+error('fit_translated_model is deprecated');
 imgsz = size(prediction,1);
 
 if nargin < 5

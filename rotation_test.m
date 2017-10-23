@@ -1,11 +1,12 @@
-imageid = 1;
+%testing script for the rotation handling functionality
+
+imageid = 1454;
 fprintf('-------------------')
 p=squeeze(pred_new(:,:,:,imageid));
 SM = new_pca_model(train_labels);
 lalala = SM;
-for i = -45
+for i = 0
     n = rotate_heatmaps(p,i);
-    size(n)
     img=imrotate(squeeze(eval_img(imageid,:,:)./255), i);
     ROT = kron(eye(15),rotmat(i));
     imshow(img)

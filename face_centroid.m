@@ -1,4 +1,6 @@
 function [centroid] = face_centroid( face )
+%FACE_CENTROID detects centroid of a face using its landmarks
+%See also HEATMAP_CENTROID
 
 face=face.';
 face=face(:);

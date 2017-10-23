@@ -1,4 +1,5 @@
 function [ ] = kagglify( x, y , filename)
+%KAGGLIFY produces and stores a Kaggle submission .csv file
 
 if nargin <3
     filename = 'KaggleSub.csv';
