@@ -1,3 +1,6 @@
+%START HERE
+
+
 %% READING DATA or load pred_init.mat instead
 imgsz = 96;
 lmn   = 15;
@@ -37,7 +40,7 @@ SM = new_pca_model(train_labels)%train model
 
 GUI = true; %completion percentage bar
 
-window_sizes = [20 10 6]; %empty vector to disable local fitting
+window_sizes = [20 10 6]; %local fit window sizes, empty vector to disable local fitting
 
 model_constraints = true; %constraints described in write-up
 

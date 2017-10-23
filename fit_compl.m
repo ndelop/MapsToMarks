@@ -1,7 +1,8 @@
 function [x, y, xl, yl] = fit_compl(SM, prediction, wind, GUI, model_constraints ,image_boundary_constraints)
 %FIT_COMPL fits the model to a set of images(=sets of heatmaps)  and returns the predictions
 %after the first iteration and after all iterations
-%See also FIT_TRANSROTATED_MODEL
+%See also FIT_TRANSROTATED_MODEL, FACE_CENTROID, FACE_TILT
+
 if nargin < 6
     image_boundary_constraints = false;
 end
@@ -35,8 +36,7 @@ for k = 1:imgn
     if GUI waitbar(k/imgn, bar, strcat(['First fit ', num2str(fps),'fps'])); end;
 end
 
-%Local fit
-wind=[40 20 7];
+%Local fitting
 wind = round(wind);
 x2=x;
 y2=y;
