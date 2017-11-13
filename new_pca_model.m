@@ -1,4 +1,4 @@
-function [ ShapeModel ] = new_pca_model( train_labels )
+function [ ShapeModel ] = new_pca_model( train_labels, centering, tilting )
 %NEW_PCA_MODEL returns a ShapeModel struct
 %ShapeModel.avg is the mean face
 %ShapeModel.C is the landmark coordinate difference generating matrix
@@ -6,12 +6,20 @@ function [ ShapeModel ] = new_pca_model( train_labels )
 %ShapeModel.EVs contains all PCA principal componets
 %ShapeModel.S contains the corresponding eigenvalues
 %ShapeModel.n contains the suggested number of principal components to be retained
+%See also ALLIGN_TRAINING_SET
+
+if nargin < 3
+    tilting = true;
+end
+if nargin < 2
+    centering = true;
+end
 
 train_labels(any(any(train_labels==-1000,2),3),:,:) = []; %cleanup, remove partially labelled data
 train_labels = permute(train_labels,[1,3,2]); %reorder
 train_labels = reshape(train_labels,size(train_labels,1),size(train_labels,2)*size(train_labels,3)); %from x y to face vectors
 %rows of train_labels: [x1 y1 x2 y2 ... xN yN]
-train_labels = allign_training_set(train_labels); 
+train_labels = allign_training_set(train_labels,centering,tilting); 
 
 ShapeModel.avg = mean(train_labels,1); %calc shape average
 

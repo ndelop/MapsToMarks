@@ -3,6 +3,7 @@ function [landmarks] = fit_transrotated_model(ShapeModel, prediction, model_cons
 %the types of constraints to be used can be set
 %the face centroid and tilt can be passed as arguments or estimated from the heatmaps
 %See also FIT_COMPL, HEATMAP_CENTROID, HEATMAP_TILT
+
 imgszx = size(prediction,1);
 imgszy = size(prediction,2);
 lmn = size(prediction,3);
@@ -75,10 +76,10 @@ b(w<=eps) = [];
 %% solve the system:
 
 %See BA write-up for constraints structure
-%only use constraints true for all of the training data:
 C=[];
 d=[];
 if model_constraints
+    %only use constraints true for all of the training data:
     ShapeModel.C = ShapeModel.C(ShapeModel.diffs>=1, :);%new ShapeModel.C is equivalent to S*C in write-up
 
     C = ShapeModel.C*ShapeModel.EVs(:,1:n);

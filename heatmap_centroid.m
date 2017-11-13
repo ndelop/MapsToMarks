@@ -6,7 +6,7 @@ function [centroid] = heatmap_centroid(heatmaps, method)
 %See also FACE_CENTROID
 
 if nargin < 2
-    method = 2
+    method = 1;
 end
 
 if method==1 %Use weighted average of sum of all heatmaps

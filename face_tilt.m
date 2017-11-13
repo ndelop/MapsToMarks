@@ -5,7 +5,7 @@ function [ tilt ] = face_tilt( face, landmarks )
 %See also HEATMAP_TILT
 
 if nargin < 2
-  landmarks = [3, 4, 5, 6]; %default for Kaggle dataset
+  landmarks = [3, 4, 5, 6]; %Kaggle eye landmarks
 end
 
 face=face.';

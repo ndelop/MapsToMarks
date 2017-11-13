@@ -6,7 +6,7 @@ function [ tilt ] = heatmap_tilt( heatmaps, landmarks )
 %See also FACE_TILT
 
 if nargin < 2
-  landmarks = [3, 4, 5, 6];  
+  landmarks = [3, 4, 5, 6];%Kaggle eye landmarks
 end
 
 heatmaps(heatmaps<0)=0;

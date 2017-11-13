@@ -4,8 +4,8 @@ images = evalin('base','eval_img');
 pred = evalin('base','pred_new');
 
 %Red
-lmx = evalin('base','xg');
-lmy = evalin('base','yg');
+lmx = evalin('base','xl');
+lmy = evalin('base','yl');
 % gtx = evalin('base','gtx');
 % gty = evalin('base','gty');
 
